@@ -1,0 +1,39 @@
+# 라즈베리파이-마이크 연결해서 돌려야 함
+
+START : node app.js
+
+!!! 코드 돌리기 전에
+change ip address in 'login.html' and 'main.html'
+
+
+> 지금 되는 것
+/login으로 접속 -> 바로 /main으로 이동 + 음성인식 켜짐 ->
+'운동시작' 말하면 /workout으로 이동. 끝.
+'사진찍기' 말하면 /takepic으로 이동 + 음성인식 켜짐. (근데 '운동시작'말해도 이동 안함..)
+
+/workout으로 접속 -> 음성인식 켜짐 -> '운동시작' 말하면 /workout으로 이동
+
+
+> 고쳐볼 것
+페이지 이동할 때 child process(음성인식) kill하기
+
+
+
+app.js
+- server file
+- handle socket event and child process event
+- routers
+	1) /login - 바로 main으로 가도록 해둠
+	2) /main - main.html과 소켓 연결하고 자식 프로세스 생성해서 음성인식 돌림
+	3) /workout - 임시로 만든 workout.html 띄워줌
+	4) /takepic - 임시로 만든 takepic.html와 소켓 연결 + 자식 프로세스 생성해서 음성인식
+
+
+child_process.js
+- 테스트용 자식 프로세스 코드
+- 정해진 시간 이후 stdout에 출력함. -> 부모프로세스에 이벤트 발생
+
+
+child_recog.js
+- 음성인식 결과를 stdout에 출력하는 자식 프로세스 코드
+- 아직 모든 음성인식 처리하지 않음. (운동시작, 사진찍기)

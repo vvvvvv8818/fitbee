@@ -1,0 +1,24 @@
+<!doctype html>
+<html>
+<head>
+</head>
+<body>
+	<h1>takepic</h1>
+	<h2 id="test">TEST</h2>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var socket = io();
+		socket.emit('main', 'msg from takepic.html');
+
+		socket.on('main', function(msg){
+			document.getElementById("test").innerHTML = msg;
+
+			if (msg == 'WORKOUT\n')
+				location.replace('http://172.30.1.24:8188/workout');
+			if (msg == 'TAKEPIC\n')
+				location.replace('http://172.30.1.24:8188/takepic');
+		});
+	</script>
+</body>
+</html>
