@@ -1,9 +1,17 @@
-var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-var spawn = require('child_process').spawn;
+var app		= require('express')();
+var http	= require('http');
+var server	= http.Server(app);
+var io		= require('socket.io')(server);
+var spawn	= require('child_process').spawn;
+var cons	= require('consolidate');
 
 var PORT = 8188;
+
+app.engine('ejs', cons.ejs);
+app.engine('html', cons.swig);
+app.set('views', './views');
+app.set('view engine', 'ejs');
+
 
 app.get('/login', function(req, res){
 	res.sendFile(__dirname + '/login.html');
@@ -45,12 +53,33 @@ app.get('/takepic', function(req, res){
 });
 
 
-/*
-io.on('connection', function(socket){
-	console.log('a user connected');
-	setting_socket(socket);	
+app.get('/mydata', function(req, res){
+	result = 'test result'
+	 var options = {
+		host: '13.124.65.48',
+		port: 3000,
+		path: '/user/inbody/1'
+	}
+
+	server.on('request', (req, res) => {
+		var awsReq = http.get(options, (awsRes) => {
+			awsRes.setEncoding('utf-8');
+			result = '';
+			
+			awsRes
+			.on('data', (chunk) => {
+				result += chunk;
+				console.log('[/mydata] chunk : ' + chunk);
+			})
+			.on('end', () => {
+				console.log('[/mydata] result : ' + result);
+				res.render('mydata', {result:result});
+			});
+		});
+	});	//server.on
+
+
 });
-*/
 
 function setting_socket(socket){
 	socket.on('main', function(msg){
@@ -88,4 +117,4 @@ function setting_child(child, socket){
 }
 
 
-http.listen(PORT, function(){ console.log('listening on ' + PORT); });
+server.listen(PORT, function(){ console.log('listening on ' + PORT); });
