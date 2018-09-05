@@ -42,12 +42,16 @@ const recognizeStream = client.streamingRecognize(request)
 		process.stdout.write('WORKOUT\n');
 	}
 	//else console.log("workout : -1\n");
-
 	if (cmd_takepic.indexOf(trans) != -1){
 		process.stdout.write('TAKEPIC\n');
 	}
 	//else console.log("takepic : -1\n");
-	});
+	if (cmd_info.indexOf(trans) != -1){
+		process.stdout.write('MYDATA\n');
+	}
+	//else console.log("takepic : -1\n");
+
+});
 
 
 //// Start recording and send the microphone input to the Speech API
@@ -57,7 +61,7 @@ record
 	threshold: 0,
 	verbose: true,
 	recordProgram: 'rec',
-	silence: '2.0',
+	silence: '1.0',
 })
 .on('error', console.error)
 .pipe(recognizeStream);
@@ -66,7 +70,7 @@ console.log('Listening, press Ctrl_C to stop.');
 
 const cmd_workout = [`운동시작\n`, `운동 시작\n`, ` 운동시작\n`, ` 운동 시작\n`];
 const cmd_takepic = ["사진찍기\n", "사진 찍기\n", " 사진찍기\n", " 사진 찍기\n"];
-const cmd_info	  = ["내정보", "내 정보", " 내정보", " 내 정보", "정보 보기", " 정보 보기", "정보보기"];
+const cmd_info	  = ["내정보\n", "내 정보\n", " 내정보\n", " 내 정보\n", "정보 보기\n", " 정보 보기\n", "정보보기\n"];
 const cmd_main		= ["메인", " 메인", "메인 화면", " 메인 화면", "메인화면", " 메인화면"];
 
 //module.exports = router;

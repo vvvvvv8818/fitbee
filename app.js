@@ -4,12 +4,13 @@ var server	= http.Server(app);
 var io		= require('socket.io')(server);
 var spawn	= require('child_process').spawn;
 var cons	= require('consolidate');
+var path	= require('path');
 
 var PORT = 8188;
 
 app.engine('ejs', cons.ejs);
 app.engine('html', cons.swig);
-app.set('views', './views');
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
@@ -61,7 +62,7 @@ app.get('/mydata', function(req, res){
 		path: '/user/inbody/1'
 	}
 
-	server.on('request', (req, res) => {
+	server.on('request', (req, response) => {
 		var awsReq = http.get(options, (awsRes) => {
 			awsRes.setEncoding('utf-8');
 			result = '';
@@ -73,7 +74,7 @@ app.get('/mydata', function(req, res){
 			})
 			.on('end', () => {
 				console.log('[/mydata] result : ' + result);
-				res.render('mydata', {result:result});
+				response.render('mydata', {result:result});
 			});
 		});
 	});	//server.on
@@ -82,12 +83,10 @@ app.get('/mydata', function(req, res){
 });
 
 function setting_socket(socket){
+	console.log('[setting_socket]');
 	socket.on('main', function(msg){
 		console.log('msg : ' + msg);
 	});
-
-	//setTimeout(function(){ socket.emit('main', 'msg from app.js');}, 3000);
-
 
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
@@ -96,19 +95,15 @@ function setting_socket(socket){
 
 
 function setting_child(child, socket){
+	console.log('[setting_child]');
 	child.stdout.on('data', function(data){
 		console.log('from child : ' + data);
 		//console.dir(data);
 
-		if (data == 'WORKOUT\n'){	// Object ArrayBuffer
-			console.log('send this msg to main.html');
-			socket.emit('main', data.toString());
+		if (data == 'WORKOUT\n' || data == 'TAKEPIC\n' || data == 'MYDATA\n'){	// Object ArrayBuffer
+			console.log('send ' + data.toString().trim() + ' to main.html');
+			socket.emit('main', data.toString().trim());
 		}
-		else if (data == 'TAKEPIC\n'){
-			console.log('send this msg to main.html');
-			socket.emit('main', data.toString());
-		}
-
 	});
 
 	child.stderr.on('data', function(data){

@@ -8,16 +8,25 @@
 
 	<script src="/socket.io/socket.io.js"></script>
 	<script>
+		var host = 'http://192.168.0.102:8188/'
 		var socket = io();
+/*
+		socket.on('connect', function(data){
+			socket.emit('main', 'socket connected');
+		}
+*/
+
 		socket.emit('main', 'msg from main.html');
 
 		socket.on('main', function(msg){
-			document.getElementById("test").innerHTML = msg;
+			document.getElementById("test").innerHTML = host + msg + 'TT';
 
-			if (msg == 'WORKOUT\n')
-				location.replace('http://172.30.1.24:8188/workout');
-			if (msg == 'TAKEPIC\n')
-				location.replace('http://172.30.1.24:8188/takepic');
+			if (msg == 'WORKOUT')
+				location.replace('http://192.168.0.102:8188/workout');
+			if (msg == 'TAKEPIC')
+				location.replace(host + 'takepic');
+			if (msg == 'MYDATA')
+				location.replace(host + 'mydata');
 		});
 	</script>
 </body>
