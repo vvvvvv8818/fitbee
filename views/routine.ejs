@@ -1,15 +1,59 @@
-<!DOCTYPE HTML>
 <html>
+
 <head>
-</head>
-<body>
-	<h1>routine</h1>
-	<p><%=result%></p>
-	<p id="myip">TEST</p>
-	<script>
-		var _promise = function(param) {
-		var my_ip = require('/home/pi/piserver/externals.js').MYIP;
-		document.getElementById("myip").innerHTML = my_ip;
-	</script>
-</body>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="mydata.css">
+    <%- mycss3.style %>
+   
+    <body>
+        <div class='top'>
+          <h1>Today's Routine List</h1>
+        </div>
+      
+        <div class='routinesection'>
+            <table class="tb">
+                <thead>
+                  <tr>
+                      <th scope="cols">Oder</th>
+                      <th scope="cols">Name</th>
+                      <th scope="cols">Position</th>
+                      <th scope="cols">Set</th>
+                  </tr>
+              </thead>
+                <tbody>
+                    <tr>
+                        <th scope="row">1.</th>
+                        <th scope="row">스쿼트</th>
+                        <th scope="row">다리</th>
+                        <th scope="row">2</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">2.</th>
+                        <th scope="row">프레스</th>
+                        <th scope="row">가슴</th>
+                        <th scope="row">2</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">3.</th>
+                        <th scope="row">플랭크</th>
+                        <th scope="row">옆구리</th>
+                        <th scope="row">2</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">4.</th>
+                        <th scope="row">플랭크</th>
+                        <th scope="row">옆구리</th>
+                        <th scope="row">3</th>
+                    </tr>
+                    <tr>
+                        <th scope="row">5.</th>
+                        <th scope="row">플랭크</th>
+                        <th scope="row">옆구리</th>
+                        <th scope="row">2</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+      </body>
+
 </html>
