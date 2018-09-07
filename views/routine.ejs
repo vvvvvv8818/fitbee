@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+</head>
+<body>
+	<h1>routine</h1>
+	<p><%=result%></p>
+	<p id="myip">TEST</p>
+	<script>
+		var _promise = function(param) {
+		var my_ip = require('/home/pi/piserver/externals.js').MYIP;
+		document.getElementById("myip").innerHTML = my_ip;
+	</script>
+</body>
+</html>

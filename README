@@ -1,5 +1,7 @@
 # 라즈베리파이-마이크 연결해서 돌려야 함
 
+#### routine 만드는중
+
 START : node app.js
 
 !!! 코드 돌리기 전에
@@ -7,7 +9,8 @@ change ip address in 'login.html' and 'main.html'
 
 
 >>> 지금 되는 것
-/login으로 접속 -> 바로 /main으로 이동 + 음성인식 켜짐 ->
+/login으로 접속 
+/main으접속 -> 음성인식 켜짐
 '운동시작' 말하면 /workout으로 이동. 끝.
 '사진찍기' 말하면 /takepic으로 이동 + 음성인식 켜짐. (근데 '운동시작'말해도 이동 안함..)
 '내정보' 말하면 /mydata로 이동 + aws 서버에서 인바디 데이터 받아옴
@@ -15,15 +18,22 @@ change ip address in 'login.html' and 'main.html'
 /mydata로 접속 -> aws 서버에서 id:1의 인바디 데이터 가져옴
 
 
+
+> 0907 minsu login 합침 -> '/login', faceDetect.py haarcascade_frontalfa~.xml
+
+
+
 >>> 고쳐볼 것
 > 페이지 이동할 때 child process(음성인식) kill하기
 > /mydata에서 인바디 받아올 때 한참걸림..1분정도?
 
 
-
 >>> 다음할일
 뷰파일 합치기
-로그인 사진 찍는 부분 합치기
+/routine AWS에서 루틴 받아오기
+/workout 접속하면 동작인식 프로세스 켜기
+/workout에 동작인식 프로세스 세팅하기
+뷰 파일마다 들어가는 ip 주소 하나로 통일하기 (외부변수?)
 
 
 
@@ -31,7 +41,7 @@ change ip address in 'login.html' and 'main.html'
 - server file
 - handle socket event and child process event
 - routers
-	1) /login - 바로 main으로 가도록 해둠
+	1) /login - login
 	2) /main - main.html과 소켓 연결하고 자식 프로세스 생성해서 음성인식 돌림
 	3) /workout - 임시로 만든 workout.html 띄워줌
 	4) /takepic - 임시로 만든 takepic.html와 소켓 연결 + 자식 프로세스 생성해서 음성인식

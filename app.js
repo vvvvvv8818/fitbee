@@ -5,8 +5,7 @@ var io		= require('socket.io')(server);
 var spawn	= require('child_process').spawn;
 var cons	= require('consolidate');
 var path	= require('path');
-
-var PORT = 8188;
+var externals = require('./externals.js');
 
 app.engine('ejs', cons.ejs);
 app.engine('html', cons.swig);
@@ -14,8 +13,36 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 
+var PORT = 8188;
+var awsServer = 'http://13.124.65.48:3000';
+
+
 app.get('/login', function(req, res){
-	res.sendFile(__dirname + '/login.html');
+	console.log('login');
+	var child = spawn('python', ['./faceDetect.py']);
+
+	child.stdout.on('data',function(chunk){
+    	var textChunk = chunk.toString('utf8');
+		console.log('textChunk : ' + textChunk);
+		
+		if (textChunk == 1) {
+			console.log('request start');
+			var fileList = []
+			var files = fs.readdirSync('./faces/');
+			for(var i=0; i<files.length; i++){
+				fileList.push(fs.createReadStream('./faces/' + files[i]))
+			}
+			var formData = { image : fileList };
+			
+			request.post({url:awsServer+'/user', formData: formData}, function optionalCallback(err, httpResponse, body) {
+				if (err) { return console.error('upload failed:', err); }
+				res.send(body);
+			});
+		}
+		else {
+			res.send('-1');
+		}
+	});
 });
 
 
@@ -36,9 +63,44 @@ app.get('/main', function(req, res){
 
 
 
+app.get('/routine', function(req, res){
+	result = 'tmp routine result'
+	var options = {
+		host: '13.124.65.48',
+		port: 3000,
+		path: '/routine/1'
+	}
+/*
+	server.on('request', (req, response) => {
+		var awsReq = http.get(options, (awsRes) => {
+			awsRes.setEncoding('utf-8');
+			result = '';
+			
+			awsRes
+			.on('data', (chunk) => {
+				result += chunk;
+				console.log('[/mydata] chunk : ' + chunk);
+			})
+			.on('end', () => {
+				console.log('[/mydata] result : ' + result);
+				response.render('mydata', {result:result});
+			});
+		});
+	});	//server.on
+*/
+
+	result = externals.MYIP;
+	res.render('routine', {result:result});
+});
+
+
+
+
 app.get('/workout', function(req, res){
+	// 민정 프로세스 키면 횟수 세질때 마다 데이터 날아옴
 	res.sendFile(__dirname + '/workout.html');
 });
+
 
 
 app.get('/takepic', function(req, res){
@@ -56,7 +118,7 @@ app.get('/takepic', function(req, res){
 
 app.get('/mydata', function(req, res){
 	result = 'test result'
-	 var options = {
+	var options = {
 		host: '13.124.65.48',
 		port: 3000,
 		path: '/user/inbody/1'
