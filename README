@@ -2,9 +2,6 @@
 
 START : node app.js
 
-!!! 코드 돌리기 전에
-change ip address in 'login.html' and 'main.html'
-
 
 >>> 지금 되는 것
 /login으로 접속 
@@ -21,7 +18,7 @@ ejs에서 script에서 변수 받을 때 '<%=myip%>' 였나 그랫음
 
 > 0907 minsu login 합침 -> '/login', faceDetect.py haarcascade_frontalfa~.xml
 > 0907 뷰파일 합침~! 이미지 잘나와요~! 근데 몇개는 테스트 필요~!
-
+> 0909 동작인식 합침 테스트 아직 안해봄
 
 
 >>> 고쳐볼 것
@@ -30,11 +27,13 @@ ejs에서 script에서 변수 받을 때 '<%=myip%>' 였나 그랫음
 
 >>> 다음할일
 /routine AWS에서 루틴 받아오기
-/workout 접속하면 동작인식 프로세스 켜기
-/workout에 동작인식 프로세스 세팅하기
-뷰 파일마다 들어가는 ip 주소 하나로 통일하기 (외부변수?)
 main.ejs에 main.html 처럼 소켓 넣기
 
+
+
+[ externals.js ]
+- 여러 곳에서 사용하는 변수(ip, port 등..)
+- require(externals.js) 해서 사용하면 됨
 
 
 [ app.js ]
