@@ -1,6 +1,5 @@
 <style>
 @import url('https://fonts.googleapis.com/css?family=Open+Sans');
-
 body {
     padding: 0;
     margin: 0;
@@ -42,16 +41,6 @@ body {
    
 
 }
-.routinesection {
-    position: absolute;
-    top: 20%;
-    left: 30%;
-    width: 40%;
-    height: 600px;
-    float: left;
-    text-align: center;
-    font-size: 30px;
-}
 .graphsection {
     position: absolute;
     top: 25%;
@@ -76,6 +65,16 @@ body {
     font-size: 30px;
     color: aliceblue;
 
+}
+.routinesection {
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    width: 40%;
+    height: 600px;
+    float: left;
+    text-align: center;
+    font-size: 30px;
 }
 .imgsection {
     position: absolute;
@@ -108,7 +107,7 @@ body {
     left: 15%;
     width: 20%;
     height: 150px;
-    font-size: 18px;
+    font-size: 20px;
     float: left;
 }
 .img_angry {
@@ -125,7 +124,7 @@ body {
     left: 75%;
     width: 15%;
     height: 150px;
-    font-size: 18px;
+    font-size: 20px;
     float: left;
 }
 table.tb {
@@ -161,7 +160,7 @@ table.tb tbody th {
     font-size: 25px;
 }
 table.tb td {
-    width: 350px;
+    width: 200px;
     padding: 10px;
     vertical-align: top;
     border-bottom: 2px solid aliceblue;

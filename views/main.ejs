@@ -12,20 +12,20 @@
 <body>
     <div class="top">
         <div class="top_name">
-            <h1>Welcome <%= name %>!</h1>
+            <h1>Welcome <%= userName %>!</h1>
         </div>
         <div class="img_smile">
             <img src="smile.png" width="100" height="100">  
         </div>
         <div class="top_con">
-            <h1>Upper Body</h1>
+            <h1><%= concent_part %></h1>
         </div>
 
         <div class="img_angry">
             <img src="sad.png" width="100" height="100">
         </div>
         <div class="top_weak">
-            <h1>None</h1>
+            <h1><%= weak_part %></h1>
         </div>
     </div>
     <div class="left">
@@ -42,21 +42,21 @@
             <tbody>
                 <tr>
                     <th scope="row">Start</th>
-                    <td>54.5</td>
-                    <td>30</td>
-                    <td>30.3</td>
+                    <td><%= init_weight %></td>
+                    <td><%= init_muscle %></td>
+                    <td><%= init_fat %></td>
                 </tr>
                 <tr>
                     <th scope="row">Current</th>
-                    <td>52.3</td>
-                    <td>32</td>
-                    <td>27.3</td>
+                    <td><%= now_weight %></td>
+                    <td><%= now_muscle %></td>
+                    <td><%= now_fat %></td>
                 </tr>
                 <tr>
                     <th scope="row">Goal</th>
-                    <td>49</td>
-                    <td>36</td>
-                    <td>25</td>
+                    <td><%= goal_weight %></td>
+                    <td><%= goal_muscle %></td>
+                    <td><%= goal_fat %></td>
                 </tr>
             </tbody>
         </table>
@@ -66,4 +66,22 @@
         <h1>Take a Picture</h1>
         <h1>My Data</h1>
     </div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		var host = 'http://192.168.0.102:8188';
+		var socket = io();
+		
+		socket.emit('main', 'msg from main.ejs');
+
+		socket.on('main', funciton(msg){
+			
+			if (msg == 'WORKOUT')
+				location.replace('http://192.168.0.102:8188/workout');
+			if (msg == 'TAKEPIC')
+				location.replace(host + '/takepic');
+			if (msg == 'MYDATA')
+				location.replace(host + '/mydata');
+		});
+	</script>
 </body>

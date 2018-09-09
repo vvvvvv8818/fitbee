@@ -52,11 +52,23 @@ body {
     margin: 0px auto;
     position: absolute;
     top: 15%;
-    left: 10%;
+    left: 5%;
     font-family: 'Open Sans', sans-serif;
     text-align: center;
     color: aliceblue; 
 
+}
+.countsection {
+    width: 100px;
+    height: 100px;
+    margin: 0px auto;
+    position: absolute;
+    top: 30%;
+    left: 80%;
+    font-family: 'Open Sans', sans-serif;
+    text-align: center;
+    color: red; 
+    font-size: 80px;
 }
 .graph1 {
     position: absolute;
