@@ -1,39 +1,23 @@
-var express	= require('express');
-var app		= express();
+var app		= require('express')();
 var http	= require('http');
 var server	= http.Server(app);
 var io		= require('socket.io')(server);
 var spawn	= require('child_process').spawn;
 var cons	= require('consolidate');
 var path	= require('path');
-var fs		= require('fs');
-var request = require('request')
 var externals = require('./externals.js');
+var fs = require('fs');
+var request = require('request');
 
 app.engine('ejs', cons.ejs);
 app.engine('html', cons.swig);
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
-app.use(express.static('public'));
 
-
-var MYIP = externals.MYIP;
-var PORT = externals.PORT;
-var MYADDR = externals.MYADDR;
+var PORT = 8188;
 var awsServer = 'http://13.124.65.48:3000';
 
-var mycss = {
-    style: fs.readFileSync('./stylesheet/background.css', 'utf8')
-};
-var mycss2 = {
-    style: fs.readFileSync('./stylesheet/video_style.css', 'utf8')
-};
-var mycss3 = {
-    style: fs.readFileSync('./stylesheet/mydata.css', 'utf8')
-};
-
-var USER_INFO = '';
 
 app.get('/login', function(req, res){
 	console.log('login');
@@ -54,7 +38,6 @@ app.get('/login', function(req, res){
 			
 			request.post({url:awsServer+'/user', formData: formData}, function optionalCallback(err, httpResponse, body) {
 				if (err) { return console.error('upload failed:', err); }
-				USER_INFO = JSON.parse(body);
 				res.send(body);
 			});
 		}
@@ -66,19 +49,18 @@ app.get('/login', function(req, res){
 
 
 app.get('/main', function(req, res){
-	// set socket + make child
+ // make child process
+	// set socket
 	io.on('connection', function(socket){
 		console.log('a user connected');
+		setting_socket(socket);	
+
 		var child = spawn('node', ['child_recog.js']);
-		setting_recog(socket, child);
+		setting_child(child, socket);
+
 	});
 
-	res.render('main', {mycss:mycss,
-						userName:'MY NAME',
-						concent_part:'CONCENT',
-						weak_part:'WEAK'
-						}
-	);
+	res.sendFile(__dirname + '/main.html');
 });
 
 
@@ -109,9 +91,7 @@ app.get('/routine', function(req, res){
 	});	//server.on
 */
 
-	console.log(MYIP);
-	console.log(PORT);
-	console.log(MYADDR);
+	result = externals.MYIP;
 	res.render('routine', {result:result});
 });
 
@@ -120,9 +100,16 @@ app.get('/routine', function(req, res){
 
 app.get('/workout', function(req, res){
 	// 민정 프로세스 키면 횟수 세질때 마다 데이터 날아옴
+ 	io.on('connection', function(socket2){
+    	console.log('start workout');
+          var child = spawn('python', ['./workout.py']);
+          setting_workout(child, socket2);
+  
+      });
 	res.sendFile(__dirname + '/workout.html');
+
 });
-//루틴안내 html보여주기
+
 
 
 app.get('/takepic', function(req, res){
@@ -134,9 +121,7 @@ app.get('/takepic', function(req, res){
 		setting_child(child, socket);
 	});
 
-	res.render('takebosypic.ejs',{
-		mycss2: mycss2
-	});
+	res.sendFile(__dirname + '/takepic.html');
 });
 
 
@@ -160,9 +145,7 @@ app.get('/mydata', function(req, res){
 			})
 			.on('end', () => {
 				console.log('[/mydata] result : ' + result);
-				response.render('mydata.ejs', {
-					mycss3: mycss3
-				});
+				response.render('mydata', {result:result});
 			});
 		});
 	});	//server.on
@@ -170,41 +153,6 @@ app.get('/mydata', function(req, res){
 
 });
 
-
-function setting_recog(socket, child){
-	console.log('[setting_socket]');
-	socket.on('main', function(msg){
-		console.log('msg : ' + msg);
-	});
-
-	socket.on('disconnect', function(){
-		console.log('user disconnected');
-		child.kill();
-	});
-
-
-	console.log('[setting_child]');
-	child.stdout.on('data', function(data){
-		console.log('from child : ' + data);
-
-		if (data == 'WORKOUT\n' || data == 'TAKEPIC\n' || data == 'MYDATA\n'){	// Object ArrayBuffer
-			console.log('send ' + data.toString().trim() + ' to main.html');
-			socket.emit('main', data.toString().trim());
-		}
-	});
-
-	child.stderr.on('data', function(data){
-		process.stdout.write(data);
-	});
-
-	child.on('exit', function(code) {
-		console.log('Child exited with code :' + code);
-	});
-}
-
-
-
-/*
 function setting_socket(socket){
 	console.log('[setting_socket]');
 	socket.on('main', function(msg){
@@ -215,8 +163,8 @@ function setting_socket(socket){
 		console.log('user disconnected');
 	});
 }
-*/
-/*
+
+
 function setting_child(child, socket){
 	console.log('[setting_child]');
 	child.stdout.on('data', function(data){
@@ -232,16 +180,18 @@ function setting_child(child, socket){
 	child.stderr.on('data', function(data){
 		process.stdout.write(data);
 	});
+}
 
-	child.on('exit', function(code) {
-		console.log('Child exited with code :' + code);
+function setting_workout(child, socket2){
+	console.log('[workout_child]');
+	child.stdout.on('data',function(count){
+		console.log('count : '+ count);
+		socket2.emit('workout', count.toString().trim());
+	});
+
+	child.stderr.on('data',function(count){
+		console.log('test'+count);
 	});
 }
-*/
 
-server.listen(PORT, function(){
-	console.log(MYIP);
-	console.log(PORT);
-	console.log(MYADDR);
-	console.log('listening on ' + PORT);
-});
+server.listen(PORT, function(){ console.log('listening on ' + PORT); });

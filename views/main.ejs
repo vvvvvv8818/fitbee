@@ -12,20 +12,20 @@
 <body>
     <div class="top">
         <div class="top_name">
-            <h1>Welcome <%= name %>!</h1>
+            <h1>Welcome <%= userName %>!</h1>
         </div>
         <div class="img_smile">
             <img src="smile.png" width="100" height="100">  
         </div>
         <div class="top_con">
-            <h1>Upper Body</h1>
+            <h1><%= concent_part %></h1>
         </div>
 
         <div class="img_angry">
             <img src="sad.png" width="100" height="100">
         </div>
         <div class="top_weak">
-            <h1>None</h1>
+            <h1><%= weak_part %></h1>
         </div>
     </div>
     <div class="left">
@@ -38,32 +38,29 @@
                     <th scope="cols">Muscle (%)</th>
                     <th scope="cols">Body Fat (%)</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <th scope="row">Start</th>
-                    <td>54.5</td>
-                    <td>30</td>
-                    <td>30.3</td>
-                </tr>
-                <tr>
-                    <th scope="row">Current</th>
-                    <td>52.3</td>
-                    <td>32</td>
-                    <td>27.3</td>
-                </tr>
-                <tr>
-                    <th scope="row">Goal</th>
-                    <td>49</td>
-                    <td>36</td>
-                    <td>25</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
     <div class="right">
         <h1>Start Workout</h1>
         <h1>Take a Picture</h1>
         <h1>My Data</h1>
     </div>
+
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		//var host = 'http://192.168.0.102:3030';
+		var host = require('externals.js').MYADDR;
+		var socket = io();
+		
+		socket.emit('main', 'msg from main.ejs');
+
+		socket.on('main', funciton(msg){
+			
+			if (msg == 'WORKOUT')
+				location.replace(host + '/routine');
+			if (msg == 'TAKEPIC')
+				location.replace(host + '/takepic');
+			if (msg == 'MYDATA')
+				location.replace(host + '/mydata');
+		});
+	</script>
 </body>
