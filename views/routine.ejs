@@ -64,7 +64,7 @@
 	socket.on('recog', function(msg){
 		if (msg == 'WORKOUT'){
 			where = '/workout';
-			socket.emit('replace', 'to ' + where');
+			socket.emit('replace', 'to ' + where);
 		}
 	});
 	socket.on('disconnect', function(msg){
