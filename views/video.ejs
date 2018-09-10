@@ -3,16 +3,27 @@
 <head>
   <meta charset="utf-8">
   <link rel="stylesheet" href="video_style.css">
-  <%- mycss.style %>
+  <%- mycss2.style %>
 </head>
 
 <body>
   <div class='top'>
-    <h1>Side Plank</h1>
+    <h1><%=EXER_INFO[0].exerName%></h1>
   </div>
 
   <div class='videosection'>
-    <video src="https://s3.ap-northeast-2.amazonaws.com/fitbee-storage/%5BVAP%5Dtest.mp4" width="900" height="600" autoplay controls></video>
+    <video id="ex1" autoplay muted width="900" height="600">
+      <source src="sideband.mp4" type="video/mp4">
+    </video>
+    <script type='text/javascript'>
+      document.getElementById('ex1').addEventListener('ended',myHandler,false);
+      var i=1;
+      function myHandler(e) {
+        for(; i<setcnt; i++)
+          location.reload();
+      }
+  </script>
+      
   </div>
   <div class='countsection'>
     <h1>10</h1>

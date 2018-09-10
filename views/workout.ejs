@@ -2,27 +2,65 @@
 <html>
 <head>
 
-<%- mycss.style %>
+<%- mycss2.style %>
 </head>
 <body>
+  <div class='top'>
+    <h1><%=EXER_INFO[0].exerName%></h1>
+  </div>
+
+  <div class='videosection'>
+    <video id="ex1" autoplay muted width="900" height="600">
+      <source src="sideband.mp4" type="video/mp4">
+    </video>
+    <script type='text/javascript'>
+      document.getElementById('ex1').addEventListener('ended',myHandler,false);
+      var i=1;
+      function myHandler(e) {
+        for(; i<setcnt; i++)
+          location.reload();
+      }
+  </script>
+      
+  </div>
+  <div class='countsection'>
+    <h1 id="count">0</h1>
+  </div>
+
+<!--
 	<h1>temporary workout page</h1>
 	<div>
 		<p id="tt">TT</p>
 	</div>
-
+-->
 	  <script src="/socket.io/socket.io.js"></script>
-      <script>
-			document.getElementById("tt").innerHTML = "whhhhhhhy"
+	  <script>
 
-          var host = 'http://192.168.0.102:8188/'
-          var socket2 = io();
-			          
-			//socket2.emit('workout', 'msg from workout.html');
-  
-          	socket2.on('workout', function(msg){
-				document.getElementById("test").innerHTML = "<b>"+msg+"</b>"
-          });
-      </script>
+	  var host = 'http://' + '<%=myaddr%>';//192.168.0.102:8188/'
+	  var socket2 = io();
+	  var where = '';
+
+	  //socket2.emit('workout', 'msg from workout.html');
+
+	  socket2.on('workout', function(msg){
+			document.getElementById("count").innerHTML = "<b>"+msg+"</b>"
+			if(msg == '2'){
+				where = '/workout2';
+				socket2.emit('replace', where);
+			
+			}		
+	  });
+
+	socket2.on('recog', function(msg){
+		if (msg == 'WORKOUT'){
+			where = '/workout2';
+			socket2.emit('replace', where);
+		}
+	});
+	socket2.on('disconnect', function(msg){
+		location.replace(host + where);
+	});
+</script>
 
 </body>
 </html>

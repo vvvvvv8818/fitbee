@@ -5,56 +5,37 @@
     <link rel="stylesheet" href="mydata.css">
     <%- mycss3.style %>
 </head>   
-    <body>
-        <div class='top'>
-          <h1>Today's Routine List</h1>
-        </div>
-      
-        <div class='routinesection'>
-            <table class="tb">
-                <thead>
-                  <tr>
-                      <th scope="cols">Oder</th>
-                      <th scope="cols">Name</th>
-                      <th scope="cols">Position</th>
-                      <th scope="cols">Set</th>
-                  </tr>
-              </thead>
-                <tbody>
-                    <tr>
-                        <th scope="row">1.</th>
-                        <th scope="row">스쿼트</th>
-                        <th scope="row">다리</th>
-                        <th scope="row">2</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">2.</th>
-                        <th scope="row">프레스</th>
-                        <th scope="row">가슴</th>
-                        <th scope="row">2</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">3.</th>
-                        <th scope="row">플랭크</th>
-                        <th scope="row">옆구리</th>
-                        <th scope="row">2</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">4.</th>
-                        <th scope="row">플랭크</th>
-                        <th scope="row">옆구리</th>
-                        <th scope="row">3</th>
-                    </tr>
-                    <tr>
-                        <th scope="row">5.</th>
-                        <th scope="row">플랭크</th>
-                        <th scope="row">옆구리</th>
-                        <th scope="row">2</th>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-      </body>
+<body>
+    <div class='top'>
+      <h1>Today's Routine List</h1>
+    </div>
+  
+    <div class='routinesection'>
+        <table class="tb">
+            <thead>
+              <tr>
+                  <th scope="cols">Oder</th>
+                  <th scope="cols">Name</th>
+                  <th scope="cols">Position</th>
+              </tr>
+          </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1.</th>
+                    <th scope="row"><%= EXER_INFO[0].exerName %></th>
+                    <th scope="row"><%= EXER_INFO[0].relatedPart %></th>
+                    
+                </tr>
+                <tr>
+                    <th scope="row">2.</th>
+                    <th scope="row"><%= EXER_INFO[1].exerName %></th>
+                    <th scope="row"><%= EXER_INFO[1].relatedPart %></th>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+  </body>
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
@@ -63,7 +44,7 @@
 	var where = '';
 	socket.on('recog', function(msg){
 		if (msg == 'WORKOUT'){
-			where = '/workout';
+			where = '/workout1';
 			socket.emit('replace', 'to ' + where);
 		}
 	});

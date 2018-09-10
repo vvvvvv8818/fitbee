@@ -16,6 +16,24 @@
   <div class='finishmsg'>
     <h1>루틴결과안내</h1>
   </div>
+
+
+<script src='/socket.io/socket.io.js'></script>
+<script>
+	var host = 'http://' + '<%=myaddr%>';	
+	var socket = io();
+	var where = '';
+
+	socket.on('recog', function(msg){
+		if (msg == 'MAIN'){
+			where = '/main';
+			socket.emit('replace', where);
+		}
+	});
+	socket.on('disconnect', function(msg){
+		location.replace(host+ where);
+	});
+</script>
 </body>
 
 </html>

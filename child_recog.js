@@ -64,14 +64,14 @@ record
 	threshold: 0,
 	verbose: true,
 	recordProgram: 'rec',
-	silence: '1.0',
+	silence: '0.7',
 })
 .on('error', console.error)
 .pipe(recognizeStream);
 
 console.log('Listening, press Ctrl_C to stop.');
 
-const cmd_workout = [`운동시작\n`, `운동 시작\n`, ` 운동시작\n`, ` 운동 시작\n`];
+const cmd_workout = [`운동시작\n`, `운동 시작\n`, ` 운동시작\n`, ` 운동 시작\n`, `다음\n`, ` 다음\n`, `시작\n`, ` 시작\n`];
 const cmd_takepic = ["사진찍기\n", "사진 찍기\n", " 사진찍기\n", " 사진 찍기\n"];
 const cmd_info	  = ["내정보\n", "내 정보\n", " 내정보\n", " 내 정보\n", "정보 보기\n", " 정보 보기\n", "정보보기\n"];
 const cmd_main	= ["메인\n", " 메인\n", "메인 화면\n", " 메인 화면\n", "메인화면\n", " 메인화면\n", "돌아가기\n", "돌아 가기\n", " 돌아가기\n"];

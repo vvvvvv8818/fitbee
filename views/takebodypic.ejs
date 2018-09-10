@@ -1,23 +1,21 @@
 <!doctype html>
 <html>
 <head>
-<!--
+
     <meta charset="utf-8">
     <link rel="stylesheet" href="video_style.css">
--->
     <%- mycss2.style %>
 </head>
 <body>
     <div class="top">
         <h1>Follow pose and Stand at Footprint.</h1>
     </div>
-    <div class='bodypicpose'>
-    <h1 id="time"> 사진을 찍을 준비를 해주세요.<h1>
+    <div class="top">
+		<h1 id="time">사진 촬영 준비중입니다.</h1>
+    </div>
+<div class='bodypicpose'>
 	<img id="body" src="none.png" width="1000" height="700">
     
-    </div>
-    <div class="count">
-        <div id="span"></div>
     </div>
 <script src="/socket.io/socket.io.js"></script>
 <script >
@@ -41,11 +39,11 @@
 		var socket3 = io();
 		var image = document.getElementById('body'); 
 		socket3.on('takepic',function(msg){
-			if(msg != "0")
+			if(msg -= "3" && msg == '2' && msg == '1')
 				document.getElementById("time").innerHTML = msg;
 			else{ 
-				document.getElementById("time").innerHTML = "사진을 완료하였습니다.";
-				image.src = "smile.png";
+				document.getElementById("time").innerHTML = "촬영이 완료되었습니다.";
+				image.src = "body.jpg";
 			}
 		});
 		

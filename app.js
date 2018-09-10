@@ -2,7 +2,7 @@ var express	= require('express');
 var app		= express();
 var http	= require('http');
 var server	= http.Server(app);
-var io		= require('socket.io')(server);
+//var io		= require('socket.io')(server);
 var spawn	= require('child_process').spawn;
 var cons	= require('consolidate');
 var path	= require('path');
@@ -70,6 +70,7 @@ app.get('/login', function(req, res){
 app.get('/main', function(req, res){
 	console.log('[/main]');
 
+	var io		= require('socket.io')(server);
 	io.on('connection', function(socket){
 		console.log('a user connected');
 		var child_recog = spawn('node', ['./child_recog.js']);
@@ -96,7 +97,7 @@ app.get('/main', function(req, res){
 	);
 });
 
-
+/*
 app.get('/routine', function(req, res){
 	result = 'tmp routine result';
 	res.render('routine', {
@@ -105,34 +106,129 @@ app.get('/routine', function(req, res){
 		result:result
 	});
 });
+*/
+
+app.get('/routine', function(req, res){
+//	result = ''
+
+var io		= require('socket.io')(server);
+	io.on('connection', function(socket){
+		console.log('a user connected');
+		var child_recog = spawn('node', ['./child_recog.js']);
+		setting_recog(socket, child_recog);
+	});
+
+	var options = {
+		host: '13.124.65.48',
+		port: 3000,
+		path: '/routine/1'//+USER_INFO.userId
+	}
+
+	var formData = ''
+	request.get(
+		{url:awsServer+'/demo', formData: formData}, 
+		function optionalCallback(err, httpResponse, data) {
+				if (err) { return console.error('upload failed:', err); }
+				//console.log('Data: '+data); //잘넘어옴
+				EXER_INFO = JSON.parse(data).data;
+				console.log("data: "+EXER_INFO[0].exerName); //성공
+				
+				res.render('routine', {
+			mycss3:mycss3,
+			myaddr: MYADDR,
+			EXER_INFO: EXER_INFO
+			});
+
+		});
+});
 
 
-
-app.get('/workout', function(req, res){
+var workout_process = -1;
+//운동영상
+app.get('/workout1', function(req, res){
+	console.log('[/workout1]');
 	// 민정 프로세스 키면 횟수 세질때 마다 데이터 날아옴
+	var io		= require('socket.io')(server);
+	io.on('connection', function(socket2){
+		console.log('start workout (socket : ' + socket2.id);
+	
+		var child_recog = spawn('node', ['./child_recog.js']);
+		console.log('child_recog : ' + child_recog.pid);
+		setting_recog(socket2, child_recog);
+
+		var child = spawn('python', ['./workout1.py']);
+		setting_workout(child, socket2);
+		workout_process = child;
+	}); 
+	var options = {
+		host: '13.124.65.48',
+		port: 3000,
+		path: '/routine/1'//+USER_INFO.userId
+	}
+	var set;
+	var formData = ''
+	request.get(
+		{url:awsServer+'/demoCnt', formData: formData}, 
+		function optionalCallback(err, httpResponse, data) {
+			if (err) { return console.error('upload failed:', err); }
+			set = JSON.parse(data);
+			console.log("data: "+data); 
+			res.render('workout', {
+				mycss2:mycss2,
+				myaddr: MYADDR,
+				EXER_INFO: EXER_INFO,
+				setcnt: set
+			});
+		});
+});
+
+app.get('/workout2', function(req, res){
+	console.log('[/workout2]');
+	// 민정 프로세스 키면 횟수 세질때 마다 데이터 날아옴
+	var io		= require('socket.io')(server);
 	io.on('connection', function(socket2){
 		console.log('start workout');
-
-		var child = spawn('python', ['./workout.py']);
-		setting_workout(child, socket2);
-
+	
 		var child_recog = spawn('node', ['./child_recog.js']);
-		setting_recog(socket2, child_recog);
-	});
-	//res.sendFile(__dirname + '/workout.html');
-	res.render('workout', {
-					mycss:mycss,
-					myaddr: MYADDR
-	});
+		setting_recog(socket2, child_recog);	
+
+		var child = spawn('python', ['./workout2.py']);
+		setting_workout(child, socket2);
+		workout_process = child;
+
+	}); 
+	var options = {
+		host: '13.124.65.48',
+		port: 3000,
+		path: '/routine/1'//+USER_INFO.userId
+	}
+	var set;
+	var formData = ''
+	request.get(
+		{url:awsServer+'/demoCnt', formData: formData}, 
+		function optionalCallback(err, httpResponse, data) {
+				if (err) { return console.error('upload failed:', err); }
+				set = JSON.parse(data);
+				console.log("data: "+data); 
+				res.render('workout2', {
+					mycss2:mycss2,
+					myaddr: MYADDR,
+					EXER_INFO: EXER_INFO,
+					setcnt: set
+				});
+		});
 });
 
 
 
 app.get('/takepic', function(req, res){
+var io	= require('socket.io')(server);
 	io.on('connection', function(socket){
-		console.log('[/takepic] a user connected');
-		var child = spawn('python', ['takepic.py']);
+		console.log('[/takepic] a user connected : ' + socket.id);
+		var child = spawn('python', ['takepic.py',USER_INFO.userName]);
 		setting_takepic(child, socket);
+		var child_recog = spawn('node', ['child_recog.js']);
+		setting_recog(socket, child_recog);
 	});
 
 	res.render('takebodypic.ejs',{
@@ -141,10 +237,19 @@ app.get('/takepic', function(req, res){
 	});
 });
 
+app.get('/setting', function(req, res){
+	res.render('setting', {
+		mycss3: mycss3,
+		concent_part: USER_INFO.concent_part,
+		weak_part: USER_INFO.weal_part
+    });
+});
+
 
 app.get('/data', function(req, res){
 	console.log('[/data]');
 	
+var io		= require('socket.io')(server);
 	io.on('connection', function(socket){
 		console.log('a user connected');
 		var child_recog = spawn('node', ['./child_recog.js']);
@@ -181,6 +286,20 @@ app.get('/data', function(req, res){
 			ch_data: CH_DATA
 			});
 		});
+});
+
+
+app.get('/finish', function(req, res){
+	console.log('[/finish]');
+
+	var io		= require('socket.io')(server);
+	io.on('connection', function(socket){
+		console.log('a user connected');
+		var child_recog = spawn('node', ['./child_recog.js']);
+		setting_recog(socket, child_recog);
+	});
+
+	res.render('finish', {mycss2:mycss2, myaddr:MYADDR});
 });
 
 
@@ -252,13 +371,7 @@ function request_AWS(url){
 
 
 function setting_recog(socket, child){
-	console.log('[setting_socket]');
-	//var st = "hello"
-	/*
-	socket.on('recog', function(msg){
-		console.log('msg : ' + msg);
-	});
-	*/
+	console.log('[setting_socket] socket: ' + socket.id + '/ child: ' + child.pid);
 
 	socket.on('replace', function(msg){
 		console.log('[replace] ' + msg);
@@ -268,6 +381,8 @@ function setting_recog(socket, child){
 	socket.on('disconnect', function(){
 		console.log('user disconnected');
 		child.kill();
+		if (workout_process != -1)
+			workout_process.kill();
 	});
 
 	console.log('[setting_child]');
@@ -302,10 +417,16 @@ function setting_workout(child, socket2){
 	child.stderr.on('data',function(count){
 		console.log('test'+count);
 	});
+/*
+	socket2.on('disconnect', function(){
+		console.log('[setting_workout] disconnect');
+		child.kill();
+	});
+*/
 }
 
  function setting_takepic(child, socket2){
-     console.log('[takepic_child]');
+     console.log('[takepic_child] child: ' + child.pid + ' / socket: ' + socket2.id);
      child.stdout.on('data',function(time){
          console.log('time : '+ time);
         socket2.emit('takepic', time.toString().trim());

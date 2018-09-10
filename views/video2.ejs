@@ -1,0 +1,33 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="video_style.css">
+  <%- mycss2.style %>
+</head>
+
+<body>
+  <div class='top'>
+    <h1><%=EXER_INFO[1].exerName%></h1>
+  </div>
+
+  <div class='videosection'>
+    <video id="ex1" autoplay muted width="900" height="600">
+      <source src="squat.mp4" type="video/mp4">
+    </video>
+    <script type='text/javascript'>
+      document.getElementById('ex1').addEventListener('ended',myHandler,false);
+      var i=1;
+      function myHandler(e) {
+        for(; i<setcnt; i++)
+          location.reload();
+      }
+  </script>
+      
+  </div>
+  <div class='countsection'>
+    <h1>10</h1>
+  </div>
+</body>
+
+</html>

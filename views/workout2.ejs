@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+<head>
+
+<%- mycss2.style %>
+</head>
+
+<body>
+  <div class='top'>
+    <h1><%=EXER_INFO[1].exerName%></h1>
+  </div>
+
+  <div class='videosection'>
+    <video id="ex1" autoplay muted width="900" height="600">
+      <source src="squat.mp4" type="video/mp4">
+    </video>
+    <script type='text/javascript'>
+      document.getElementById('ex1').addEventListener('ended',myHandler,false);
+      var i=1;
+      function myHandler(e) {
+        for(; i<setcnt; i++)
+          location.reload();
+      }
+  </script>
+      
+  </div>
+  <div class='countsection'>
+    <h1 id="count">0</h1>
+  </div>
+
+
+	<script src='/socket.io/socket.io.js'></script>
+	<script>
+	//var host = 'http://192.168.0.102:8188/'
+		var host = 'http://' + '<%=myaddr%>';
+          var socket2 = io();
+		  var where = '';
+			          
+          socket2.on('workout', function(msg){
+				document.getElementById("count").innerHTML = "<b>"+msg+"</b>"
+				if (msg == '2'){
+					where = '/finish';
+					socket2.emit('replace', where);
+				}
+          });
+		socket2.on('recog', function(msg){
+			if (msg == 'WORKOUT'){
+				where = '/finish';
+				socket2.emit('replace', where);
+			}
+		});
+		socket2.on('disconnect', function(msg){
+			location.replace(host + where);
+		});
+    </script>
+
+</body>
+</html>
