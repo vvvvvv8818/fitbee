@@ -126,12 +126,12 @@ app.get('/workout', function(req, res){
 });
 
 
-
 app.get('/takepic', function(req, res){
-	io.on('connection', function(socket){
+	console.log('[/takepic]');
+	io.on('connection', function(socket3){
 		console.log('[/takepic] a user connected');
-		var child = spawn('python', ['takepic.py']);
-		setting_takepic(child, socket);
+		var child = spawn('python', ['./takepic.py']);
+		setting_takepic(child, socket3);
 	});
 
 	res.render('takebodypic.ejs',{
@@ -167,7 +167,6 @@ app.get('/data', function(req, res){
 				CH_DATA = JSON.parse(data).change_data;
 				//res.send(body);
 				//var tmp = INBODY_DATA.weight;
-
 		res.render('data', {
 			mycss3:mycss3,
 			myaddr: MYADDR,	
@@ -251,16 +250,14 @@ function request_AWS(url){
 
 function setting_recog(socket, child){
 	console.log('[setting_socket]');
-	//var st = "hello"
-	/*
+	var st = "hello"
 	socket.on('recog', function(msg){
 		console.log('msg : ' + msg);
 	});
-	*/
 
 	socket.on('replace', function(msg){
-		console.log('[replace] ' + msg);
-		socket.disconnect();
+		child.kill();
+		console.log('\'replace\' ' + msg);
 	});
 
 	socket.on('disconnect', function(){
@@ -290,6 +287,8 @@ function setting_recog(socket, child){
 }
 
 
+
+
 function setting_workout(child, socket2){
 	console.log('[workout_child]');
 	child.stdout.on('data',function(count){
@@ -302,11 +301,11 @@ function setting_workout(child, socket2){
 	});
 }
 
- function setting_takepic(child, socket2){
+ function setting_takepic(child, socket3){
      console.log('[takepic_child]');
      child.stdout.on('data',function(time){
          console.log('time : '+ time);
-        socket2.emit('takepic', time.toString().trim());
+        socket3.emit('takepic', time.toString().trim());
      });
  
      child.stderr.on('data',function(time){

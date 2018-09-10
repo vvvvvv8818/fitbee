@@ -13,7 +13,6 @@
 <body>
 
     <div class="top">
-	<p id="tt">BBBBBBBTTTTTTTTTTTT</p>
         <div class="top_name">
             <h1 id="welcome">Welcome <%= userName %>!</h1>
         </div>
@@ -70,7 +69,6 @@
         <h1>My Data</h1>
     </div>
 
-<h1>temporary</h1>
 <div >
 <p id="tt">innerHtml</p>
 </div>
@@ -78,25 +76,43 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 
-	//var host = require('externals.js').myaddr;
-	var host = 'http://192.168.0.102:8118/';
+	var host = 'http://' + '<%=myaddr%>';
+	document.getElementById("tt").innerHTML = host;
+	//document.getElementById("tt").innerHTML = typeof(host);	// string
+	//var host = 'http://192.168.0.102:8118';
+
 	var socket = io();
 
-	//socket.emit('main', 'msg from main.ejs');
-
+	var where = '';
 
 	socket.on('recog', function(msg){
+		where = msg;
+		if (msg == 'MYDATA'){
+			where = 'data';
+		}
+		socket.emit('replace', 'to /' + where);
 
-		if (msg == 'WORKOUT')
-			location.replace(host + '/workout');
+/*
+		if (msg == 'WORKOUT'){
+			location.replace(host + '/routine');
+		}
 		else if (msg == 'TAKEPIC')
 			location.replace(host + '/takepic');
-		else if (msg == 'MYDATA')
-			location.replace(host + '/mydata');
-		else
-	document.getElementById("tt").innerHTML = "kkkkkkkkkkkI";
+		else if (msg == 'MYDATA'){
+			socket.emit('replace', 'to /routine');
+			socket.disconnect();
 
+			location.replace(host + '/data');
+		}
+		else
+			document.getElementById("tt").innerHTML = "order using your voice";
+*/
 	});
+
+	socket.on('disconnect', function(msg){
+		location.replace(host + '/' +  where);	
+	});
+
 
 </script>
 
