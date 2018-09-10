@@ -56,7 +56,8 @@ app.get('/login', function(req, res){
 			request.post({url:awsServer+'/user', formData: formData}, function optionalCallback(err, httpResponse, body) {
 				if (err) { return console.error('upload failed:', err); }
 				USER_INFO = JSON.parse(body);
-				res.send(body);
+				//res.send(body);
+				res.render('login', {myaddr:MYADDR});
 			});
 		}
 		else {
@@ -135,7 +136,8 @@ app.get('/takepic', function(req, res){
 	});
 
 	res.render('takebodypic.ejs',{
-		mycss2: mycss2
+		mycss2: mycss2,
+		myaddr: MYADDR
 	});
 });
 

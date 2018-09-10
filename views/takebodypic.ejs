@@ -37,6 +37,7 @@
     }
     window.onload = function TimerStart() { tid = setInterval('msg_time()', 1000) };
 */
+		var host = 'http://' + '<%=myaddr%>';
 		var socket3 = io();
 		var image = document.getElementById('body'); 
 		socket3.on('takepic',function(msg){
@@ -46,6 +47,17 @@
 				document.getElementById("time").innerHTML = "사진을 완료하였습니다.";
 				image.src = "smile.png";
 			}
+		});
+		
+		var where = '';
+		socket3.on('recog', function(msg){
+			if (msg == 'MAIN'){
+				where = '/main';
+				socket3.emit('replace', where);
+			}	
+		});
+		socket3.on('disconnect', function(msg){
+			location.replace(host + where);
 		});
 
 </script>
