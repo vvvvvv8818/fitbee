@@ -1,18 +1,5 @@
-# 라즈베리파이-마이크 연결해서 돌려야 함
-
+# 라즈베리파이-마이크,카메라 연결해서 돌려야 함
 START : node app.js
-
-
->>> 지금 되는 것
-/login으로 접속 
-/main으접속 -> 음성인식 켜짐
-'운동시작' 말하면 /workout으로 이동. 끝.
-'사진찍기' 말하면 /takepic으로 이동 + 음성인식 켜짐. (근데 '운동시작'말해도 이동 안함..)
-'내정보' 말하면 /mydata로 이동 + aws 서버에서 인바디 데이터 받아옴
-/workout으로 접속 -> 음성인식 켜짐 -> '운동시작' 말하면 /workout으로 이동
-/mydata로 접속 -> aws 서버에서 id:1의 인바디 데이터 가져옴
-
-ejs에서 script에서 변수 받을 때 '<%=myip%>' 였나 그랫음
 
 
 
@@ -23,12 +10,10 @@ ejs에서 script에서 변수 받을 때 '<%=myip%>' 였나 그랫음
 
 >>> 고쳐볼 것
 > /mydata에서 인바디 받아올 때 한참걸림..1분정도?
-> main에서 소켓연결 왜 안되냐!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
 >>> 다음할일
 /routine AWS에서 루틴 받아오기
-main.ejs에 main.html 처럼 소켓 넣기
 
 
 
@@ -42,10 +27,10 @@ main.ejs에 main.html 처럼 소켓 넣기
 - handle socket event and child process event
 - routers
 	1) /login - login
-	2) /main - main.html과 소켓 연결하고 자식 프로세스 생성해서 음성인식 돌림
-	3) /workout - 임시로 만든 workout.html 띄워줌
+	2) /main - 자식 프로세스 생성해서 음성인식 돌림
+	3) /workout - 음성인식, 동작인식 프로세스 실행
 	4) /takepic - 임시로 만든 takepic.html와 소켓 연결 + 자식 프로세스 생성해서 음성인식
-	5) /mydata - 임시로 인바디 데이터 받아옴.
+	5) /data - 그래프 수정해야 함
 
 
 [ child_process.js ]
@@ -56,3 +41,4 @@ main.ejs에 main.html 처럼 소켓 넣기
 [ child_recog.js ]
 - 음성인식 결과를 stdout에 출력하는 자식 프로세스 코드
 - 아직 모든 음성인식 처리하지 않음. (운동시작, 사진찍기)
+
