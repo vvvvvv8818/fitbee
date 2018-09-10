@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+<head>
+
+<%- mycss.style %>
+</head>
+<body>
+	<h1>temporary workout page</h1>
+	<div>
+		<p id="tt">TT</p>
+	</div>
+
+	  <script src="/socket.io/socket.io.js"></script>
+      <script>
+			document.getElementById("tt").innerHTML = "whhhhhhhy"
+
+          var host = 'http://192.168.0.102:8188/'
+          var socket2 = io();
+			          
+			//socket2.emit('workout', 'msg from workout.html');
+  
+          	socket2.on('workout', function(msg){
+				document.getElementById("test").innerHTML = "<b>"+msg+"</b>"
+          });
+      </script>
+
+</body>
+</html>

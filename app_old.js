@@ -63,6 +63,11 @@ app.get('/login', function(req, res){
 			res.send('-1');
 		}
 	});
+/*	res.render('start',{
+		mycss: mycss
+		}
+	);
+*/
 });
 
 
@@ -71,27 +76,28 @@ app.get('/main', function(req, res){
 
 	io.on('connection', function(socket){
 		console.log('a user connected');
-		var child_recog = spawn('node', ['./child_recog.js']);
+//		var child_recog = spawn('node', ['./child_recog.js']);
 		setting_recog(socket, child_recog);
 	});
 
-	res.render('main.ejs', 
-		{
+	res.render('main', {
 		mycss: mycss, 
-		userName: USER_INFO.userName,
-		weak_part: USER_INFO.weak_part,
-		concent_part: USER_INFO.concent_part,
-		goal_weight: USER_INFO.goal_weight,
-		goal_muscle: USER_INFO.goal_muscle,
-		goal_fat: USER_INFO.goal_fat,
-		init_weight: USER_INFO.init_weight,
-		init_muscle: USER_INFO.init_muscle,
-		init_fat: USER_INFO.init_fat,
-		now_weight: USER_INFO.now_weight,
-		now_muscle: USER_INFO.now_muscle,
-		now_fat: USER_INFO.now_fat 
+		userName: 'my name~~',//USER_INFO.userName,
+		weak_part: 'weak',//USER_INFO.weak_part,
+		concent_part: 'con',//USER_INFO.concent_part,
+		goal_weight: 'w',//USER_INFO.goal_weight,
+		goal_muscle: 'm',//USER_INFO.goal_muscle,
+		goal_fat: 'fat',//USER_INFO.goal_fat,
+		init_weight: 'ww',//USER_INFO.init_weight,
+		init_muscle: 'mu',//USER_INFO.init_muscle,
+		init_fat: 'fatt',//USER_INFO.init_fat,
+		now_weight: 'wei',//USER_INFO.now_weight,
+		now_muscle: 'musc',//USER_INFO.now_muscle,
+		now_fat: 'fatttt'//USER_INFO.now_fat 
 		}
 	);
+
+	//res.sendFile(__dirname+'/main.html');
 });
 
 
@@ -149,7 +155,6 @@ app.get('/workout', function(req, res){
 });
 
 
-
 app.get('/takepic', function(req, res){
 	io.on('connection', function(socket){
 		console.log('[/takepic] a user connected');
@@ -164,10 +169,9 @@ app.get('/takepic', function(req, res){
 	});
 });
 
-
 app.get('/data', function(req, res){
 	result = 'test result'
-
+/*
 	var options = {
 		host: '13.124.65.48',
 		port: 3000,
@@ -177,31 +181,24 @@ app.get('/data', function(req, res){
 	var CH_DATA;
 			
 	var formData = ''
-	request.get(
+	request.post(
 		{url:awsServer+'/user/inbody/1', formData: formData}, 
 		function optionalCallback(err, httpResponse, data) {
 				if (err) { return console.error('upload failed:', err); }
 				INBODY_DATA = JSON.parse(data).inbody_data;
-				console.log("data: "+INBODY_DATA.weight);
+				console.log(INBODY_DATA);
 				CH_DATA = JSON.parse(data).change_data;
 				//res.send(body);
-				//var tmp = INBODY_DATA.weight;
-		res.render('data', {
-			mycss3:mycss3,
-			
-			weight: INBODY_DATA.weight,
-			muscle: INBODY_DATA.muscle,
-			fat_percent: INBODY_DATA.fat_percent,
-			bmi: INBODY_DATA.bmi,
-			length: CH_DATA.length,
-			ch_data: CH_DATA
-			
-			});
-
 		});
+*/
+	res.render('data', {
+			mycss3:mycss3,
+			weight: 'w',//INBODY_DATA.weight,
+			muscle: 'm',//INBODY_DATA.muscle,
+			fat_percent: 'fat',//INBODY_DATA.fat_percent,
+			bmi: 'bmi'//INBODY_DATA.bmi
+	});
 });
-
-
 /*
 	server.on('request', (req, response) => {
 		var awsReq = http.get(options, (awsRes) => {
@@ -236,7 +233,6 @@ app.get('/data', function(req, res){
 */
 
 
-
 function request_AWS(url){
 	var options = {
 		host: '13.124.65.48',
@@ -268,10 +264,8 @@ function request_AWS(url){
 
 
 
-
 function setting_recog(socket, child){
 	console.log('[setting_socket]');
-	var st = "hello"
 	socket.on('recog', function(msg){
 		console.log('msg : ' + msg);
 	});
@@ -281,21 +275,21 @@ function setting_recog(socket, child){
 		child.kill();
 	});
 
+
+
 	console.log('[setting_child]');
-	
 	child.stdout.on('data', function(data){
 		console.log('from child : ' + data);
 
 		if (data == 'WORKOUT\n' || data == 'TAKEPIC\n' || data == 'MYDATA\n'){	// Object ArrayBuffer
 			console.log('send ' + data.toString().trim() + ' to main.html');
-			socket.emit('recog', data.toString().trim());
+			socket.emit('main', data.toString().trim());
 		}
 	});
 
 	child.stderr.on('data', function(data){
 		process.stdout.write(data);
 	});
-
 
 	child.on('exit', function(code) {
 		console.log('Child exited with code :' + code);

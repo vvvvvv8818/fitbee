@@ -1,19 +1,41 @@
 <!doctype html>
 <html>
+
 <head>
-<!--
     <meta charset="utf-8">
     <link rel="stylesheet" href="background.css"type="text/css" >
--->
+
 <%- mycss.style %>
 </head>
-<!--  
+  
 <script language='javascript'></script>
--->
+
 <body>
 
+<script src="/socket.io/socket.io.js"></script>
+<script>
+	document.getElementById("welcome").innerHTML = "HI";
+	document.getElementById("tt").innerHTML = "bbbbbbbbbbbbbbbbbI";
+
+	//var host = require('externals.js').myaddr;
+	var host = 'http://192.168.0.102:8118';
+	var socket = io();
+
+	//socket.emit('main', 'msg from main.ejs');
+
+
+	socket.on('recog', function(msg){
+		if (msg == 'WORKOUT')
+			location.replace(host + '/workout');
+		if (msg == 'TAKEPIC')
+			location.replace(host + '/takepic');
+		if (msg == 'MYDATA')
+			location.replace(host + '/mydata');
+	}
+</script>
+
     <div class="top">
-	<p id="tt">BBBBBBBTTTTTTTTTTTT</p>
+	<p id="tt">TTTTTTTTTTTTTTTT</p>
         <div class="top_name">
             <h1 id="welcome">Welcome <%= userName %>!</h1>
         </div>
@@ -69,37 +91,6 @@
         <h1>Take a Picture</h1>
         <h1>My Data</h1>
     </div>
-
-<h1>temporary</h1>
-<div >
-<p id="tt">innerHtml</p>
-</div>
-
-<script src="/socket.io/socket.io.js"></script>
-<script>
-
-	//var host = require('externals.js').myaddr;
-	var host = 'http://192.168.0.102:8118/';
-	var socket = io();
-
-	//socket.emit('main', 'msg from main.ejs');
-
-
-	socket.on('recog', function(msg){
-
-		if (msg == 'WORKOUT')
-			location.replace(host + '/workout');
-		else if (msg == 'TAKEPIC')
-			location.replace(host + '/takepic');
-		else if (msg == 'MYDATA')
-			location.replace(host + '/mydata');
-		else
-	document.getElementById("tt").innerHTML = "kkkkkkkkkkkI";
-
-	});
-
-</script>
-
 
 </body>
 </html>

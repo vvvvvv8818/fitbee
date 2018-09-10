@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="mydata.css">
+    <%- mycss3.style %>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+        google.charts.load('current', { 'packages': ['line'] });
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+
+            var data = new google.visualization.DataTable();
+            data.addColumn('date', 'Date');
+      data.addColumn('number', 'Weight');
+      data.addColumn('number', 'Muscle');
+      data.addColumn('number', 'Fat');
+
+      data.addRows([
+        [new Date(2018, 4, 25),  54.5, 30, 30.3],
+        [new Date(2018, 4, 30),  54.2, 30.3, 30.0],
+        [new Date(2018, 5, 1),  54, 30.3, 29.8],
+        [new Date(2018, 5, 10),  53.8, 31, 29.6],
+        [new Date(2018, 5, 18),  53.2, 31.1, 29],
+        [new Date(2018, 6, 15),  52.9, 31.5, 28.7],
+        [new Date(2018, 7, 26),  53.3, 31.5, 29],
+        [new Date(2018, 7, 31),  52.8,   31.4, 28.3],
+        [new Date(2018, 8, 1),  52.7,   31.5, 27.4],
+        [new Date(2018, 8, 11),  52.4,   31.8, 27.7],
+        [new Date(2018, 9, 2),  52.3,   32.3, 27.3]
+        
+        
+      ]);
+
+            var options = {
+        chart: {
+          title: '신체변화기록'
+        },
+        hAxis:{
+            title:'Date',
+            format:'MM/dd',
+            gridlines: {count: 4},
+            textStyle: {fontSize: 20}
+        },
+        vAxis:{
+            maxValue:50
+        },
+        width: 600,
+        height: 500,
+        fontSize: 30,
+        legend:{
+            position: 'bottom',
+            textStyle:{fontSize:15}
+        },
+
+
+        colors:['#101826', '#e81b09', '#00ff00']
+      };
+
+            var chart = new google.charts.Line(document.getElementById('change_graph'));
+
+            chart.draw(data, google.charts.Line.convertOptions(options));
+
+
+        }
+
+    </script>
+
+	<script>
+		document.getElementById("title").innerHTML = "MMMMMY Data";
+	</script>
+</head>
+
+<body>
+    <div class='top'>
+        <h1 id="title">Data</h1>
+        <div class='leftsection'>
+            <h2>Inbody Data</h2>
+            <table class="tb">
+                <tr>
+                    <th scope="row">Weight (kg)</th>
+                    <td><%= weight %></td>
+                </tr>
+                <tr>
+                    <th scope="row">Muscle (%)</th>
+                    <td><%= muscle %></td>
+                </tr>
+                <tr>
+                    <th scope="row">Body Fat (%)</th>
+                    <td><%= fat_percent %></td>
+                </tr>
+                <tr>
+                    <th scope="row">BMI</th>
+                    <td><%= bmi %></td>
+                </tr>
+
+            </table>
+        </div>
+        <div class='rightsection'>
+      
+                <div id="change_graph"></div>
+            </div>
+        </div>
+</body>
+
+</html>

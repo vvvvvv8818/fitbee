@@ -18,25 +18,25 @@
       data.addColumn('number', 'Muscle');
       data.addColumn('number', 'Fat');
 
-      data.addRows([
-        [new Date(2018, 4, 25),  54.5, 30, 30.3],
-        [new Date(2018, 4, 30),  54.2, 30.3, 30.0],
-        [new Date(2018, 5, 1),  54, 30.3, 29.8],
-        [new Date(2018, 5, 10),  53.8, 31, 29.6],
-        [new Date(2018, 5, 18),  53.2, 31.1, 29],
-        [new Date(2018, 6, 15),  52.9, 31.5, 28.7],
-        [new Date(2018, 7, 26),  53.3, 31.5, 29],
-        [new Date(2018, 7, 31),  52.8,   31.4, 28.3],
-        [new Date(2018, 8, 1),  52.7,   31.5, 27.4],
-        [new Date(2018, 8, 11),  52.4,   31.8, 27.7],
-        [new Date(2018, 9, 2),  52.3,   32.3, 27.3]
-        
-        
-      ]);
-
+      for(var i=0; i<<%=length%>; i++){
+          data.addRow([new Date(2018,2,1), 2, 2, 2]);
+      }
+      /*data.addRows([
+      [new Date(2018, 0, 10),  -2, 2, 2],
+        [new Date(2018, 4, 30),  0, 0, -2],
+        [new Date(2018, 5, 1),  , 4, 4.-4],
+        [new Date(2018, 5, 10),  0, 10, 2],
+        [new Date(2018, 5, 18),  -1, -7, 3],
+        [new Date(2018, 6, 15),  -2, 1, 4],
+        [new Date(2018, 7, 26),  -2, 5, 1],
+        [new Date(2018, 7, 31),  0, -2, -2],
+        [new Date(2018, 8, 1),  2, 3, -4],
+        [new Date(2018, 8, 11),  3, 4, 3],
+        [new Date(2018, 9, 2),  -2, -2, -5]
+      ]);*/
             var options = {
         chart: {
-          title: '신체변화기록'
+          title: 'History of Physical Data (+/-)'
         },
         hAxis:{
             title:'Date',
