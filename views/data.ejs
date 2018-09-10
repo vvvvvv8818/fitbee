@@ -104,16 +104,21 @@
 <script src="/socket.io/socket.io.js"></script>
 <script>
 	var host = 'http://' + '<%=myaddr%>';
-
 	document.getElementById("tt").innerHTML = host;
 
 	var socket = io();
+	var where = '';
 
 	socket.on('recog', function(msg){
-		if (msg == 'MAIN')
-			location.replace(host + '/main');
+		if (msg == 'MAIN'){
+			where = '/main'
+			socket.emit('replace', where);
+		}
 		else 
 			document.getElementById("tt").innerHTML = "order using your voice";
+	});
+	socket.on('disconnect', fcuntion(msg){
+		location.replace(host + where);
 	});
 
 </script>

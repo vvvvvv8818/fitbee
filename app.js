@@ -98,7 +98,7 @@ app.get('/main', function(req, res){
 
 app.get('/routine', function(req, res){
 	result = 'tmp routine result';
-	res.render('routine_tmp', {
+	res.render('routine', {
 		mycss3: mycss3,
 		myaddr: MYADDR,
 		result:result

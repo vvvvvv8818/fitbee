@@ -58,13 +58,17 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script>
-	//var host = '<=%myaddr%>';
-	var host = 'http://192.168.0.102/8118';
+	var host = 'http://' + '<%=myaddr%>';
 	var socket = io();
-
+	var where = '';
 	socket.on('recog', function(msg){
-		if (msg == 'WORKOUT')
-			location.replace(host + '/workout');
+		if (msg == 'WORKOUT'){
+			where = '/workout';
+			socket.emit('replace', 'to ' + where');
+		}
+	});
+	socket.on('disconnect', function(msg){
+		location.replace(host + where);
 	});
 
 </script>

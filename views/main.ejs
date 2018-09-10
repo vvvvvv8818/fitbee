@@ -84,33 +84,28 @@
 	var socket = io();
 
 	var where = '';
-
 	socket.on('recog', function(msg){
-		where = msg;
-		if (msg == 'MYDATA'){
-			where = 'data';
-		}
-		socket.emit('replace', 'to /' + where);
+		//socket.emit('replace', 'to /' + where);
+		document.getElementById("tt").innerHTML = msg;	// string
 
-/*
 		if (msg == 'WORKOUT'){
-			location.replace(host + '/routine');
+			where = '/routine';
+			socket.emit('replace', 'to /' + where);
 		}
-		else if (msg == 'TAKEPIC')
-			location.replace(host + '/takepic');
+		else if (msg == 'TAKEPIC'){
+			where = '/takepic';
+			socket.emit('replace', 'to /' + where);
+		}
 		else if (msg == 'MYDATA'){
-			socket.emit('replace', 'to /routine');
-			socket.disconnect();
-
-			location.replace(host + '/data');
+			where = '/data';
+			socket.emit('replace', 'to /' + where);
 		}
 		else
 			document.getElementById("tt").innerHTML = "order using your voice";
-*/
 	});
 
 	socket.on('disconnect', function(msg){
-		location.replace(host + '/' +  where);	
+		location.replace(host + where);	
 	});
 
 
