@@ -22,7 +22,7 @@ const request = {
 	//audio: audio,
 	config: config,
 	interimResults: false,	//// if you want interim results, set this to true
-	key: 'AIzaSyBFDW2vYbakoXRSlV3vOpDQAFp3nYjOvI8'
+	//key: 'AIzaSyBFDW2vYbakoXRSlV3vOpDQAFp3nYjOvI8'
 };
 
 

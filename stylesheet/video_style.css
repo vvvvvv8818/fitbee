@@ -37,13 +37,14 @@ body {
     background-color: aliceblue;
 }
 .count{
-    width: 300px;
+    width: 500px;
     height: 300px;
     position: absolute;
     top: 35%;
-    left: 70%;
-    font-size: 30px;
+    left: 65%;
+    font-size: 60px;
     text-align: center;
+	color: red;
 }
 .videosection {
     width: 1000px;

@@ -17,6 +17,8 @@ time.sleep(1)
 
 img = cv2.imread("./public/workout11.png")
 img2 = cv2.imread("./public/workout12.png")
+back10 = cv2.imread("./public/back.jpg")
+#temp123123 = cv2.resize(back10, (320,240),interpolation=cv2.INTER_CUBIC)
 ret, img = cv2.threshold(img,10,255,cv2.THRESH_BINARY)
 ret, img2 = cv2.threshold(img2,10,255,cv2.THRESH_BINARY)
 img_ = img[:img.shape[0],:img.shape[1],0]
@@ -61,18 +63,18 @@ def pixelCompare(m1,m2):
 	#print("similar"+str(similar))
 	return similar
 try :
+	frmask = mog2.apply(back10)
+	global back
+	back = mog2.getBackgroundImage()
+	#cv2.imshow("back",back10)		#count = count + 1
     #capture frames from the camera
 	for cap in camera.capture_continuous(rawCapture,format="bgr", use_video_port=True):
 		similar = 0
 		frame = cap.array
-		if count<maxFrame :
-			frmask = mog2.apply(frame)
-			count = count + 1
-		elif count == maxFrame:
-			global back
-			back = mog2.getBackgroundImage()
-			count = count + 1
-		else :	
+		#if count<maxFrame :
+		#	count = count + 1
+		#elif count == maxFrame:
+		#else :	
 		#frame = cv2.cvtColor(frame,cv2.COLOR_RGB2GRAY)
 		#frame3 = cv2.absdiff(frame2,img)
 		#ret, frame3 = cv2.threshold(frame3,120,255,cv2.THRESH_BINARY)
@@ -82,71 +84,69 @@ try :
 		#frmask = mog2.apply(frame,learningRate =0.01) 
 			#frame3 = cv2.absdiff(frame,back)
 			
-			frame3 = cv2.absdiff(back,frame)
-			frame3 = cv2.dilate(frame3,kernel,iterations=1)
-			frame3 = cv2.cvtColor(frame3,cv2.COLOR_RGB2GRAY)
-			ret, frame4 = cv2.threshold(frame3,40,255,cv2.THRESH_BINARY)
+		frame3 = cv2.absdiff(back,frame)
+		frame3 = cv2.dilate(frame3,kernel,iterations=1)
+		frame3 = cv2.cvtColor(frame3,cv2.COLOR_RGB2GRAY)
+		ret, frame4 = cv2.threshold(frame3,40,255,cv2.THRESH_BINARY)
 		#	frame4 = cv2.dilate(frame4,kernel,iterations=3)
 			#cv2.imshow("frame4",frame4)
-			frame5 = frame4.copy()
-			close = np.ones((4,4),np.uint8,3)
-			frame5 = cv2.morphologyEx(frame5,cv2.MORPH_CLOSE,close)			
-
-			frame6 =frame5.copy()
-			h,w = frame6.shape[:2]
-			mask = np.zeros((h+2,w+2),np.uint8)
-			frame6[0,:w] = 0
-			frame6[h-1,:w] = 0
-			frame6[:h,0] = 0
-			frame6[:h,w-1] = 0
-			cv2.floodFill(frame6,mask,(0,0),255)
-			frame6_inv = cv2.bitwise_not(frame6)
-
-			frame6 = frame5 | frame6_inv
-			numOfLables, img_label, stats, centroids = cv2.connectedComponentsWithStats(frame4)
-			for idx, centroid in enumerate(centroids):  
-				if stats[idx][0] == 0 and stats[idx][1] == 0:  
-					continue  
-				if np.any(np.isnan(centroid)):  
-					continue  
-				x, y, width, height, area = stats[idx]  
-				centerX, centerY = int(centroid[0]), int(centroid[1])  
-				
-				if area > 5000 and width>50 and height>150 :
-					cv2.rectangle(frame, (x, y), (x+width, y+height), (0, 0, 255))  
-					global crop
-					crop = frame6[y:y+height,x:x+width]
-					#crop = cv2.resize(crop,(129,129),cv2.INTER_CUBIC)
-					#print("asdf"+str(crop.shape))
-					#print("zzz"+str(img.shape))
-					if check1==0:
-						img__= cv2.resize(img_, (crop.shape[1],crop.shape[0]), interpolation=cv2.INTER_CUBIC)
-						#similar = pixelCompare(crop,img)
-						similar = cv2.matchTemplate(crop,img__,cv2.TM_CCOEFF_NORMED)
-						cv2.imshow("img",img__)
+		frame5 = frame4.copy()
+		close = np.ones((4,4),np.uint8,3)
+		frame5 = cv2.morphologyEx(frame5,cv2.MORPH_CLOSE,close)			
+		frame6 =frame5.copy()
+		h,w = frame6.shape[:2]
+		mask = np.zeros((h+2,w+2),np.uint8)
+		frame6[0,:w] = 0
+		frame6[h-1,:w] = 0
+		frame6[:h,0] = 0
+		frame6[:h,w-1] = 0
+		cv2.floodFill(frame6,mask,(0,0),255)
+		frame6_inv = cv2.bitwise_not(frame6)
+		frame6 = frame5 | frame6_inv
+		numOfLables, img_label, stats, centroids = cv2.connectedComponentsWithStats(frame4)
+		for idx, centroid in enumerate(centroids):  
+			if stats[idx][0] == 0 and stats[idx][1] == 0:  
+				continue  
+			if np.any(np.isnan(centroid)):  
+				continue  
+			x, y, width, height, area = stats[idx]  
+			centerX, centerY = int(centroid[0]), int(centroid[1])  
+			
+			if area > 5000 and width>50 and height>150 :
+				cv2.rectangle(frame, (x, y), (x+width, y+height), (0, 0, 255))  
+				global crop
+				crop = frame6[y:y+height,x:x+width]
+				#crop = cv2.resize(crop,(129,129),cv2.INTER_CUBIC)
+				#print("asdf"+str(crop.shape))
+				#print("zzz"+str(img.shape))
+				if check1==0:
+					img__= cv2.resize(img_, (crop.shape[1],crop.shape[0]), interpolation=cv2.INTER_CUBIC)
+					#similar = pixelCompare(crop,img)
+					similar = cv2.matchTemplate(crop,img__,cv2.TM_CCOEFF_NORMED)
+					#cv2.imshow("img",img__)
+					similar = np.mean(similar)
+					if similar > 0.5:
+						#print("similar1 : "+str(similar))
+						check1 = 1
+				else: 
+					if check2 ==0:
+						img2__= cv2.resize(img2_, (crop.shape[1],crop.shape[0]), interpolation=cv2.INTER_CUBIC)
+						#similar = pixelCompare(crop,img2)
+						similar = cv2.matchTemplate(img2__,crop,cv2.TM_CCOEFF_NORMED)
 						similar = np.mean(similar)
+						#cv2.imshow("img",img2__)
 						if similar > 0.5:
-							#print("similar1 : "+str(similar))
-							check1 = 1
-					else: 
-						if check2 ==0:
-							img2__= cv2.resize(img2_, (crop.shape[1],crop.shape[0]), interpolation=cv2.INTER_CUBIC)
-							#similar = pixelCompare(crop,img2)
-							similar = cv2.matchTemplate(img2__,crop,cv2.TM_CCOEFF_NORMED)
-							similar = np.mean(similar)
-							cv2.imshow("img",img2__)
-							if similar > 0.5:
-								#print("similar2 : "+str(similar))
-								check2 = 1
-										
-					if check1 == 1 and check2 == 1:
-						count_check += 1
-						print(count_check)
-						sys.stdout.flush()
-						check1 = 0
-						check2 =0
-					
-					cv2.imshow("crop",crop)
+							#print("similar2 : "+str(similar))
+							check2 = 1
+									
+				if check1 == 1 and check2 == 1:
+					count_check += 1
+					print(count_check)
+					sys.stdout.flush()
+					check1 = 0
+					check2 =0
+				
+				#cv2.imshow("crop",crop)
 					
 
 
@@ -154,7 +154,7 @@ try :
 			if count_check == 2:
 				break;
 			cv2.imshow("frame",frame)
-			cv2.imshow("frame6",frame6)
+			#cv2.imshow("frame6",frame6)
 		
 		rawCapture.truncate(0)
 
